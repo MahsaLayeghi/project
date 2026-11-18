@@ -17,19 +17,25 @@ def train_moons(num_epochs: int = 500, lr: float = 0.05, seed: int = 42):
     X, y = make_dataset()
 
     # TODO: instantiate model, criterion (BCEWithLogitsLoss), optimiser (Adam, lr=lr)
-    model = None
-    criterion = None
-    optimiser = None
+    model = MoonsNet()
+    criterion = nn.BCEWithLogitsLoss()
+    optimiser = torch.optim.Adam(model.parameters(), lr = lr)
 
     history = []
     for _ in range(num_epochs):
         # TODO: the five lines of a PyTorch training loop
         # 1. zero the gradients
+        optimiser.zero_grad() # clear old gradients
         # 2. forward pass -> preds
+        preds = model(X) # forward pass
         # 3. loss = criterion(preds, y)
+        loss = criterion(preds, y) #how wrong are we?
         # 4. loss.backward()
+        loss.backward() # compute gradients
         # 5. optimiser.step()
+        optimiser.step() # update the weights
         # ... then append loss.item() to history.
+        history.append(loss.item())
         pass
 
     return model, history
